@@ -1,4 +1,5 @@
 const Ticket = require("../models/Ticket");
+const { sendEmail } = require("../utils/emailService");
 
 // Create Ticket
 exports.createTicket = async (req, res) => {
@@ -33,33 +34,41 @@ exports.getTickets = async (req, res) => {
 };
 
 // update tickets
+
 exports.updateTicket = async (req, res) => {
   const { id } = req.params;
-  const { title, description, status } = req.body;
+  const { status } = req.body;
 
   try {
-    const ticket = await Ticket.findById(id);
+    const ticket = await Ticket.findById(id).populate(
+      "createdBy",
+      "username email"
+    );
     if (!ticket) {
       return res.status(404).json({ error: "Ticket not found" });
     }
 
     // Check if the user is the creator or an admin
-    if (ticket.createdBy.toString() !== req.userId && req.role !== "admin") {
+    if (
+      ticket.createdBy._id.toString() !== req.userId &&
+      req.role !== "admin"
+    ) {
       return res.status(403).json({ error: "Access denied" });
-    }
-
-    // Users can only update title and description
-    if (req.role === "user") {
-      ticket.title = title || ticket.title;
-      ticket.description = description || ticket.description;
     }
 
     // Admins can update status
     if (req.role === "admin" && status) {
       ticket.status = status;
+      await ticket.save();
+
+      // Send email notification if notifications are enabled
+      if (ticket.createdBy.email && ticket.createdBy.notifications) {
+        const subject = "Your Ticket Status Has Been Updated";
+        const text = `Your ticket "${ticket.title}" has been updated to "${ticket.status}".`;
+        await sendEmail(ticket.createdBy.email, subject, text);
+      }
     }
 
-    await ticket.save();
     res.json(ticket);
   } catch (err) {
     res.status(400).json({ error: err.message });

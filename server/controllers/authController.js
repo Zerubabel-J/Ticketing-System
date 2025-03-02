@@ -4,16 +4,15 @@ const bcrypt = require("bcryptjs");
 
 // Signup
 exports.signup = async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, email, password, role } = req.body;
   try {
-    const user = new User({ username, password, role });
+    const user = new User({ username, email, password, role });
     await user.save();
     res.status(201).json({ message: "User created successfully" });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
-
 // Login
 exports.login = async (req, res) => {
   const { username, password } = req.body;
