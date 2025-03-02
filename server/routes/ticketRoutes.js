@@ -3,13 +3,13 @@ const {
   createTicket,
   getTickets,
   updateTicket,
+  deleteTicket,
 } = require("../controllers/ticketController");
 const authMiddleware = require("../middleware/authMiddleware");
-const roleMiddleware = require("../middleware/roleMiddleware");
 const router = express.Router();
 
 router.post("/", authMiddleware, createTicket);
 router.get("/", authMiddleware, getTickets);
-router.put("/:id", authMiddleware, roleMiddleware("admin"), updateTicket);
-
+router.put("/:id", authMiddleware, updateTicket);
+router.delete("/:id", authMiddleware, deleteTicket);
 module.exports = router;
