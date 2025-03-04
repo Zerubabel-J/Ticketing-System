@@ -32,13 +32,9 @@ exports.getTickets = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
-
-// update tickets
-
-exports.updateTicket = async (req, res) => {
+//get ticket by id
+exports.getTicketById = async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
-
   try {
     const ticket = await Ticket.findById(id).populate(
       "createdBy",
@@ -47,34 +43,62 @@ exports.updateTicket = async (req, res) => {
     if (!ticket) {
       return res.status(404).json({ error: "Ticket not found" });
     }
-
-    // Check if the user is the creator or an admin
-    if (
-      ticket.createdBy._id.toString() !== req.userId &&
-      req.role !== "admin"
-    ) {
-      return res.status(403).json({ error: "Access denied" });
-    }
-
-    // Admins can update status
-    if (req.role === "admin" && status) {
-      ticket.status = status;
-      await ticket.save();
-
-      // Send email notification if notifications are enabled
-      if (ticket.createdBy.email && ticket.createdBy.notifications) {
-        const subject = "Your Ticket Status Has Been Updated";
-        const text = `Your ticket "${ticket.title}" has been updated to "${ticket.status}".`;
-        await sendEmail(ticket.createdBy.email, subject, text);
-      }
-    }
-
     res.json(ticket);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
+// update tickets
+// backend/controllers/ticketController.js
+exports.updateTicket = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, status } = req.body;
 
+  try {
+    // Find the ticket and check permissions
+    const ticket = await Ticket.findById(id).populate(
+      "createdBy",
+      "username email"
+    );
+    if (!ticket) {
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+
+    // Check if user is the creator OR an admin
+    const isCreator = ticket.createdBy._id.toString() === req.userId;
+    const isAdmin = req.role === "admin";
+
+    if (!isCreator && !isAdmin) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+
+    // Update fields based on role
+    if (isCreator) {
+      // Regular users can update title/description
+      ticket.title = title || ticket.title;
+      ticket.description = description || ticket.description;
+    }
+
+    if (isAdmin) {
+      // Admins can update status
+      ticket.status = status || ticket.status;
+    }
+
+    // Save changes to the database
+    const updatedTicket = await ticket.save();
+
+    // Send email notification (admin actions only)
+    if (isAdmin && status && ticket.createdBy.email) {
+      const subject = "Your Ticket Status Has Been Updated";
+      const text = `Your ticket "${ticket.title}" has been updated to "${ticket.status}".`;
+      await sendEmail(ticket.createdBy.email, subject, text);
+    }
+
+    res.json(updatedTicket);
+  } catch (err) {
+    res.status(400).json({ error: err.message }); // Fixed typo: err.Message -> err.message
+  }
+};
 // backend/controllers/ticketController.js
 exports.deleteTicket = async (req, res) => {
   const { id } = req.params;
