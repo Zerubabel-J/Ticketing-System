@@ -1,31 +1,8 @@
-// src/pages/ManageTickets.jsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import axios from "axios";
 
-const ManageTickets = () => {
-  const [tickets, setTickets] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/api/tickets", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setTickets(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching tickets:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchTickets();
-  }, []);
-
+const ManageTickets = ({ tickets, onDeleteTicket, userRole }) => {
   const handleDelete = (ticketId) => {
     Swal.fire({
       title: "Are you sure?",
@@ -35,31 +12,12 @@ const ManageTickets = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
-        try {
-          const token = localStorage.getItem("token");
-          await axios.delete(`http://localhost:5000/api/tickets/${ticketId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setTickets((prevTickets) =>
-            prevTickets.filter((ticket) => ticket._id !== ticketId)
-          );
-          Swal.fire("Deleted!", "Your ticket has been deleted.", "success");
-        } catch (error) {
-          console.error("Error deleting ticket:", error);
-          const errorMessage =
-            error.response?.data?.error ||
-            "There was a problem deleting the ticket.";
-          Swal.fire("Error!", errorMessage, "error");
-        }
+        onDeleteTicket(ticketId);
       }
     });
   };
-
-  if (loading) {
-    return <div className="text-center mt-8">Loading...</div>;
-  }
 
   function TruncatedDescription({ description, maxLength }) {
     const truncatedText =
@@ -74,7 +32,7 @@ const ManageTickets = () => {
     <div className="container mx-auto">
       <h2 className="text-3xl mb-6 text-gray-600">Manage Tickets</h2>
 
-      <table className=" w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
+      <table className="w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
         <thead className="bg-gray-200">
           <tr>
             <th className="p-0 text-center text-gray-600 whitespace-nowrap">
@@ -97,7 +55,7 @@ const ManageTickets = () => {
         <tbody>
           {tickets.map((ticket) => (
             <tr key={ticket._id} className="border-b">
-              <td className="px-2  py-4 text-gray-800 text-center">
+              <td className="px-2 py-4 text-gray-800 text-center">
                 {ticket.title}
               </td>
               <td className="px-2 py-4 text-gray-800 text-center">
@@ -110,11 +68,15 @@ const ManageTickets = () => {
                 {ticket.status}
               </td>
               <td className="px-2 py-4 text-gray-800 text-center">
-                {ticket.createdBy.username}
+                {ticket.createdBy?.username}
               </td>
               <td className="px-2 py-4 text-center">
                 <Link
-                  to={`/dashboard/edit-ticket/${ticket._id}`}
+                  to={
+                    userRole === "admin"
+                      ? `/admin-dashboard/edit-ticket/${ticket._id}`
+                      : `/dashboard/edit-ticket/${ticket._id}`
+                  }
                   className="text-blue-500 hover:underline mr-4"
                 >
                   Edit
