@@ -1,8 +1,9 @@
-// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { loginSuccess, loginFailure } from "../store/features/userSlice"; // Import Redux actions
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -10,6 +11,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Function to extract role from token
   const getRoleFromToken = (token) => {
@@ -38,15 +40,17 @@ const Login = () => {
           password,
         }
       );
-
-      // Save the token in localStorage
       localStorage.setItem("token", response.data.token);
 
-      // Extract role from token
       const role = getRoleFromToken(response.data.token);
 
-      // Show success message
-      Swal.fire("Success", "Logged in successfully!", "success");
+      // Dispatch loginSuccess action with user data
+      dispatch(
+        loginSuccess({
+          user: { username, role }, // User data
+          token: response.data.token, // Token
+        })
+      );
 
       // Redirect based on role
       if (role === "admin") {
@@ -60,6 +64,10 @@ const Login = () => {
         error.response?.data?.error || error.message
       );
       setError("Invalid username or password");
+
+      // Dispatch loginFailure action with error message
+      dispatch(loginFailure(error.response?.data?.error || "Login failed"));
+
       Swal.fire("Error", "Invalid username or password", "error");
     } finally {
       setLoading(false);
