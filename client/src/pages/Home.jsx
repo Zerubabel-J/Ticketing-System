@@ -11,6 +11,10 @@ export default function Home() {
           Manage and track your tickets effortlessly. Login or sign up to access
           all features.
         </p>
+        <p className="text-lg">
+          Kindly use these credentials to check the admin features,{" "}
+          <strong>Username: Admin , Password: 123456</strong>
+        </p>
         <img
           src={lanimg}
           alt="Ticketing System"
