@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import axios from "axios";
-
+import apiConfig from "../api/apiConfig";
 const AdminManageTickets = () => {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,12 +13,8 @@ const AdminManageTickets = () => {
     const fetchTickets = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          "https://ticketing-system-g1mw.onrender.com/api/tickets",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+
+        const response = await apiConfig("/tickets");
         setTickets(response.data);
         setError("");
 
@@ -50,13 +45,7 @@ const AdminManageTickets = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const token = localStorage.getItem("token");
-          await axios.delete(
-            `https://ticketing-system-g1mw.onrender.com/api/tickets/${ticketId}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
+          await apiConfig.delete(`/tickets/${ticketId}`);
           setTickets((prevTickets) =>
             prevTickets.filter((ticket) => ticket._id !== ticketId)
           );

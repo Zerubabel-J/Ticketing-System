@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-
+import apiConfig from "../api/apiConfig";
 const EditTicket = () => {
   const { id } = useParams(); // Get ticket ID from URL
   const navigate = useNavigate(); // To navigate after successful edit
@@ -17,12 +17,7 @@ const EditTicket = () => {
     const fetchTicket = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `https://ticketing-system-g1mw.onrender.com/api/tickets/${id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await apiConfig.get(`/tickets/${id}`);
         setTicket(response.data);
         setLoading(false);
       } catch (error) {
@@ -47,14 +42,10 @@ const EditTicket = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
-        `https://ticketing-system-g1mw.onrender.com/api/tickets/${id}`,
-        {
-          title: ticket.title,
-          description: ticket.description,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await apiConfig.put(`/tickets/${id}`, {
+        title: ticket.title,
+        description: ticket.description,
+      });
       Swal.fire("Success", "Ticket updated successfully!", "success");
       navigate("/dashboard");
     } catch (error) {

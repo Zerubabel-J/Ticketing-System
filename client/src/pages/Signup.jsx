@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import axios from "axios";
+import apiConfig from "../api/apiConfig";
 
 const Signup = () => {
   const [user, setUser] = useState({
@@ -23,12 +23,11 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Send a POST request to the backend signup endpoint
-      await axios.post(
-        "https://ticketing-system-g1mw.onrender.com/api/auth/signup",
-        user
-      );
-
+      // await axios.post(
+      //   "https://ticketing-system-g1mw.onrender.com/api/auth/signup",
+      //   user
+      // );
+      await apiConfig.post("/auth/signup", user);
       // Reset form fields
       setUser({
         username: "",

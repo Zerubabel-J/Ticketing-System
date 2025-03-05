@@ -1,29 +1,23 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Swal from "sweetalert2";
+import apiConfig from "../api/apiConfig";
 
 const AdminEditTicket = () => {
-  const { id } = useParams(); // Get ticket ID from URL
-  const navigate = useNavigate(); // To navigate after successful edit
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const [ticket, setTicket] = useState({
     title: "",
     description: "",
-    status: "Open", // Added status field
+    status: "Open",
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTicket = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `https://ticketing-system-g1mw.onrender.com/api/tickets/${id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await apiConfig.get(`/tickets/${id}`);
         setTicket(response.data);
         setLoading(false);
       } catch (error) {
@@ -47,16 +41,11 @@ const AdminEditTicket = () => {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(
-        `https://ticketing-system-g1mw.onrender.com/api/tickets/${id}`,
-        {
-          title: ticket.title,
-          description: ticket.description,
-          status: ticket.status, // Include status in the update
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await apiConfig.put(`/tickets/${id}`, {
+        title: ticket.title,
+        description: ticket.description,
+        status: ticket.status,
+      });
       Swal.fire("Success", "Ticket updated successfully!", "success");
       navigate("/admin-dashboard/tickets"); // Redirect to the tickets list
     } catch (error) {

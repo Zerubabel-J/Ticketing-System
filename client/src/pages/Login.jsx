@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import axios from "axios";
+import apiConfig from "../api/apiConfig";
 import { loginSuccess, loginFailure } from "../store/features/userSlice"; // Import Redux actions
 
 const Login = () => {
@@ -32,14 +32,10 @@ const Login = () => {
     setError("");
 
     try {
-      // Send a POST request to the backend login endpoint
-      const response = await axios.post(
-        "https://ticketing-system-g1mw.onrender.com/api/auth/login",
-        {
-          username,
-          password,
-        }
-      );
+      const response = await apiConfig.post("/auth/login", {
+        username,
+        password,
+      });
       localStorage.setItem("token", response.data.token);
 
       const role = getRoleFromToken(response.data.token);
@@ -47,8 +43,8 @@ const Login = () => {
       // Dispatch loginSuccess action with user data
       dispatch(
         loginSuccess({
-          user: { username, role }, // User data
-          token: response.data.token, // Token
+          user: { username, role },
+          token: response.data.token,
         })
       );
 

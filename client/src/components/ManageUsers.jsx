@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-
+import apiConfig from "../api/apiConfig";
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,13 +9,7 @@ const ManageUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          "https://ticketing-system-g1mw.onrender.com/api/users",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await apiConfig.get("/users");
         setUsers(response.data.users);
         setLoading(false);
       } catch (error) {
@@ -30,12 +24,8 @@ const ManageUsers = () => {
   const handleRoleChange = async (userId, newRole) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
-        `https://ticketing-system-g1mw.onrender.com/api/users/${userId}/role`,
-        { role: newRole },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
 
+      await apiConfig.put(`/users/${userId}/role`, { role: newRole });
       setUsers(
         users.map((user) =>
           user._id === userId ? { ...user, role: newRole } : user
@@ -65,14 +55,7 @@ const ManageUsers = () => {
 
     if (result.isConfirmed) {
       try {
-        const token = localStorage.getItem("token");
-        await axios.delete(
-          `https://ticketing-system-g1mw.onrender.com/api/users/${userId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
+        await apiConfig.delete(`/users/${userId}`);
         setUsers(users.filter((user) => user._id !== userId));
         Swal.fire("Deleted!", "User has been deleted.", "success");
       } catch (error) {

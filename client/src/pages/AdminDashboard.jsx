@@ -2,7 +2,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
-import axios from "axios";
+import apiConfig from "../api/apiConfig";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,7 +12,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { use } from "react";
 
 // Register the components
 ChartJS.register(
@@ -35,12 +34,8 @@ const AdminDashboard = () => {
       try {
         const token = localStorage.getItem("token");
         const [ticketsRes, usersRes] = await Promise.all([
-          axios.get("https://ticketing-system-g1mw.onrender.com/api/tickets", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("https://ticketing-system-g1mw.onrender.com/api/users", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          apiConfig.get("/tickets"),
+          apiConfig.get("/users"),
         ]);
 
         setTickets(ticketsRes.data);

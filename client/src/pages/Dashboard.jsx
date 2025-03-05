@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import ManageTickets from "../components/ManageTickets";
-
+import apiConfig from "../api/apiConfig";
 export default function Dashboard() {
   const [tickets, setTickets] = useState([]);
   const [title, setTitle] = useState("");
@@ -18,14 +17,9 @@ export default function Dashboard() {
   const fetchTickets = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://ticketing-system-g1mw.onrender.com/api/tickets",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await apiConfig.get("/tickets");
       setTickets(response.data);
+      console.log("Tickets goooo", tickets);
       setError("");
     } catch (error) {
       console.error(
@@ -53,17 +47,7 @@ export default function Dashboard() {
   const handleCreateTicket = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        "https://ticketing-system-g1mw.onrender.com/api/tickets",
-        { title, description },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      // Log the response for debugging
-      console.log("New Ticket Response:", response.data);
-
-      // Update the tickets state with the new ticket (including createdBy)
+      const response = await apiConfig.post("/tickets", { title, description });
       setTickets((prevTickets) => [...prevTickets, response.data]);
 
       setTitle("");
@@ -80,13 +64,7 @@ export default function Dashboard() {
 
   const handleDeleteTicket = async (ticketId) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.delete(
-        `https://ticketing-system-g1mw.onrender.com/api/tickets/${ticketId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await apiConfig.delete(`/tickets/${ticketId}`);
       setTickets((prevTickets) =>
         prevTickets.filter((ticket) => ticket._id !== ticketId)
       );
