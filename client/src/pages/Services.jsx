@@ -10,8 +10,8 @@ export function Services() {
           the process.
         </p>
         <p className="text-lg">
-          Join us today and experience seamless ticket management with an
-          intuitive and responsive interface.
+          Join us today and experience ticket management with a responsive
+          interface.
         </p>
       </div>
     </div>
