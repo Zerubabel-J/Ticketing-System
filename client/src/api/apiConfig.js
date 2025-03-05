@@ -1,7 +1,9 @@
 import axios from "axios";
 
 // Set the base URL from environment variables
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+const baseURL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://ticketing-system-g1mw.onrender.com/api";
 console.log("Base env", import.meta.env);
 console.log("Base urlllll", baseURL);
 // Create an Axios instance with default configurations
