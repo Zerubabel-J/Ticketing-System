@@ -19,9 +19,12 @@ export default function Dashboard() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/tickets", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://ticketing-system-g1mw.onrender.com/api/tickets",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setTickets(response.data);
       setError("");
     } catch (error) {
@@ -52,11 +55,17 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:5000/api/tickets",
+        "https://ticketing-system-g1mw.onrender.com/api/tickets",
         { title, description },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      // Log the response for debugging
+      console.log("New Ticket Response:", response.data);
+
+      // Update the tickets state with the new ticket (including createdBy)
       setTickets((prevTickets) => [...prevTickets, response.data]);
+
       setTitle("");
       setDescription("");
       setError("");
@@ -72,9 +81,12 @@ export default function Dashboard() {
   const handleDeleteTicket = async (ticketId) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/tickets/${ticketId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `https://ticketing-system-g1mw.onrender.com/api/tickets/${ticketId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setTickets((prevTickets) =>
         prevTickets.filter((ticket) => ticket._id !== ticketId)
       );

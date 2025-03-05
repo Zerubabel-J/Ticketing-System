@@ -35,10 +35,10 @@ const AdminDashboard = () => {
       try {
         const token = localStorage.getItem("token");
         const [ticketsRes, usersRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/tickets", {
+          axios.get("https://ticketing-system-g1mw.onrender.com/api/tickets", {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get("http://localhost:5000/api/users", {
+          axios.get("https://ticketing-system-g1mw.onrender.com/api/users", {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);

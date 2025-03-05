@@ -21,13 +21,13 @@ const userSlice = createSlice({
     loginSuccess: (state, action) => {
       state.loading = false;
       state.isAuthenticated = true;
-      state.user = action.payload.user; // User data from the API
-      state.token = action.payload.token; // Token from the API
+      state.user = action.payload.user;
+      state.token = action.payload.token;
     },
     // Action to handle login failure
     loginFailure: (state, action) => {
       state.loading = false;
-      state.error = action.payload; // Error message from the API
+      state.error = action.payload;
     },
     // Action to handle logout
     logout: (state) => {

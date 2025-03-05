@@ -34,7 +34,7 @@ const Login = () => {
     try {
       // Send a POST request to the backend login endpoint
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://ticketing-system-g1mw.onrender.com/api/auth/login",
         {
           username,
           password,

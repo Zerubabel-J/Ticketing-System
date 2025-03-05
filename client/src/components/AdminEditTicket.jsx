@@ -19,7 +19,7 @@ const AdminEditTicket = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://localhost:5000/api/tickets/${id}`,
+          `https://ticketing-system-g1mw.onrender.com/api/tickets/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -49,7 +49,7 @@ const AdminEditTicket = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:5000/api/tickets/${id}`,
+        `https://ticketing-system-g1mw.onrender.com/api/tickets/${id}`,
         {
           title: ticket.title,
           description: ticket.description,

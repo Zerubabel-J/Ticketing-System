@@ -5,10 +5,10 @@ import axios from "axios";
 
 const Signup = () => {
   const [user, setUser] = useState({
-    username: "", // Changed from 'name' to 'username'
+    username: "",
     email: "",
     password: "",
-    role: "user", // Default role is 'user'
+    role: "user",
   });
   const navigate = useNavigate();
 
@@ -24,7 +24,10 @@ const Signup = () => {
     e.preventDefault();
     try {
       // Send a POST request to the backend signup endpoint
-      await axios.post("http://localhost:5000/api/auth/signup", user);
+      await axios.post(
+        "https://ticketing-system-g1mw.onrender.com/api/auth/signup",
+        user
+      );
 
       // Reset form fields
       setUser({

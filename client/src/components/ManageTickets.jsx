@@ -68,7 +68,7 @@ const ManageTickets = ({ tickets, onDeleteTicket, userRole }) => {
                 {ticket.status}
               </td>
               <td className="px-2 py-4 text-gray-800 text-center">
-                {ticket.createdBy?.username}
+                {ticket.createdBy ? ticket.createdBy.username : "Loading..."}
               </td>
               <td className="px-2 py-4 text-center">
                 <Link

@@ -14,9 +14,12 @@ const AdminManageTickets = () => {
     const fetchTickets = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/api/tickets", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "https://ticketing-system-g1mw.onrender.com/api/tickets",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setTickets(response.data);
         setError("");
 
@@ -48,9 +51,12 @@ const AdminManageTickets = () => {
       if (result.isConfirmed) {
         try {
           const token = localStorage.getItem("token");
-          await axios.delete(`http://localhost:5000/api/tickets/${ticketId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          await axios.delete(
+            `https://ticketing-system-g1mw.onrender.com/api/tickets/${ticketId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
           setTickets((prevTickets) =>
             prevTickets.filter((ticket) => ticket._id !== ticketId)
           );
