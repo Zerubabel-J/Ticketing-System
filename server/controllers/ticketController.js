@@ -1,6 +1,5 @@
 const Ticket = require("../models/Ticket");
-const { sendEmail } = require("../utils/emailService");
-
+const istrue = true;
 // Create Ticket
 exports.createTicket = async (req, res) => {
   const { title, description } = req.body;
@@ -90,7 +89,6 @@ exports.updateTicket = async (req, res) => {
     if (isAdmin && status && ticket.createdBy.email) {
       const subject = "Your Ticket Status Has Been Updated";
       const text = `Your ticket "${ticket.title}" has been updated to "${ticket.status}".`;
-      await sendEmail(ticket.createdBy.email, subject, text);
     }
 
     res.json(updatedTicket);

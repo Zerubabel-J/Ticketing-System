@@ -1,7 +1,5 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
-const { sendEmail } = require("../utils/emailService");
-
 exports.getAllUsers = async (req, res) => {
   try {
     if (req.role !== "admin") {
@@ -100,8 +98,6 @@ exports.updateUserRole = async (req, res) => {
     if (user.email && user.notifications) {
       const subject = "Your Role Has Been Updated";
       const text = `Your role has been changed to "${user.role}".`;
-
-      await sendEmail(user.email, subject, text);
     }
 
     res.json({ message: "User role updated successfully" });
