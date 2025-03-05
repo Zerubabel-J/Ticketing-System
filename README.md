@@ -25,6 +25,21 @@ Responsive UI: Built with Tailwind CSS for a clean and modern design.
 Check out the deployed project here:
 👉 https://ticketing-system-beta.vercel.app/
 
+## Credentials for Testing
+
+You can use the following credentials to log in and test the system:
+
+1. User Account
+   Username: User
+   Password: 123456
+
+2. Admin Account
+   Username: Admin
+   Password: 123456
+
+3. Sign Up
+   You can also create a new user account by signing up. However, new users will have the User role by default. To access admin features, use the admin credentials provided above.
+
 # Installation
 
 Run the following command to install all required dependencies for both the front-end and back-end:
