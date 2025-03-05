@@ -1,17 +1,27 @@
 const Ticket = require("../models/Ticket");
-const istrue = true;
 // Create Ticket
 exports.createTicket = async (req, res) => {
   const { title, description } = req.body;
   try {
-    const ticket = new Ticket({ title, description, createdBy: req.userId });
+    const ticket = new Ticket({
+      title,
+      description,
+      createdBy: req.userId,
+    });
+
     await ticket.save();
-    res.status(201).json(ticket);
+
+    // Populate the createdBy field with user details
+    const populatedTicket = await Ticket.findById(ticket._id).populate(
+      "createdBy",
+      "username"
+    );
+
+    res.status(201).json(populatedTicket);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
-
 // Get Tickets
 exports.getTickets = async (req, res) => {
   try {
