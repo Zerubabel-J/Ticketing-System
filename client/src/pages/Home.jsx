@@ -12,7 +12,7 @@ export default function Home() {
           all features.
         </p>
         <p className="text-lg">
-          Kindly use these credentials to check the admin features,{" "}
+          Kindly use these credentials to check the admin features, <br />
           <strong>Username: Admin , Password: 123456</strong>
         </p>
         <img
