@@ -49,7 +49,6 @@ exports.getTicketById = async (req, res) => {
   }
 };
 // update tickets
-// backend/controllers/ticketController.js
 exports.updateTicket = async (req, res) => {
   const { id } = req.params;
   const { title, description, status } = req.body;
@@ -96,10 +95,10 @@ exports.updateTicket = async (req, res) => {
 
     res.json(updatedTicket);
   } catch (err) {
-    res.status(400).json({ error: err.message }); // Fixed typo: err.Message -> err.message
+    res.status(400).json({ error: err.message });
   }
 };
-// backend/controllers/ticketController.js
+
 exports.deleteTicket = async (req, res) => {
   const { id } = req.params;
 
