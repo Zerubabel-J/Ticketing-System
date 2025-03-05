@@ -31,10 +31,12 @@ You can use the following credentials to log in and test the system:
 
 1. User Account
    Username: User
+
    Password: 123456
 
 2. Admin Account
    Username: Admin
+
    Password: 123456
 
 3. Sign Up
