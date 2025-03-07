@@ -29,7 +29,7 @@ const ManageTickets = ({ tickets, onDeleteTicket, userRole }) => {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto overflow-x-auto">
       <h2 className="text-3xl mb-6 text-gray-600">Manage Tickets</h2>
 
       <table className="w-full bg-white border border-gray-300 rounded-lg overflow-hidden">

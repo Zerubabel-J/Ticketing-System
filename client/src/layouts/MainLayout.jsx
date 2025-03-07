@@ -4,7 +4,7 @@ import Header from "../components/NavHeader";
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen  flex flex-col">
       <Header />
       <NavBar />
       <main className="flex-1">{children}</main>

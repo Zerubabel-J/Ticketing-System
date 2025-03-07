@@ -59,8 +59,8 @@ const AdminEditTicket = () => {
   }
 
   return (
-    <div className="container mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-4">Edit Ticket</h2>
+    <div className="container  mx-auto mt-8">
+      <h2 className="text-center text-2xl font-bold mb-4">Edit Ticket</h2>
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">Title</label>
